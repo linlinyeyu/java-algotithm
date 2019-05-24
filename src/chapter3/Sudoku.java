@@ -70,14 +70,16 @@ public class Sudoku {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        int sudokusNumber = scanner.nextInt();
+        int sudokusNumber = Integer.valueOf(scanner.nextLine());
         for (int i = 1; i <= sudokusNumber; i++) {
             boolean flag = true;
             Sudoku sudoku = new Sudoku();
             int k = 0;
             List<String> numbers = new ArrayList<>();
-            System.out.println(scanner.nextLine());
-            while (k < 9) {
+            if (i != 1) {
+                scanner.nextLine();
+            }
+            while (k<9) {
                 numbers.add(scanner.nextLine());
                 k++;
             }
@@ -87,19 +89,69 @@ public class Sudoku {
                     sudoku.sudokus[m][n] = Integer.valueOf(values[n]);
                 }
             }
-            int rowsum = 0,columsum = 0;
+            int rowsum = 0,columsum = 0,rowmulti = 1,columnmulti = 1;
             for (int row = 0;row < 9;row++) {
                 for (int column = 0;column<9;column++) {
                     rowsum += sudoku.sudokus[row][column];
-                    columsum += sudoku.sudokus[column][row];
+                    rowmulti *= sudoku.sudokus[row][column];
                 }
-                if (rowsum != 45 || columsum != 45) {
+                if (rowsum != 45 || rowmulti != 362880) {
                     flag = false;
                     break;
                 }
                 rowsum = 0;
-                columsum = 0;
+                rowmulti = 1;
             }
+            if (flag) {
+                for (int column = 0;column < 9;column++) {
+                    for (int row = 0;row < 9;row++) {
+                        columsum += sudoku.sudokus[row][column];
+                        columnmulti *= sudoku.sudokus[row][column];
+                    }
+                    if (columsum != 45 || columnmulti != 362880) {
+                        flag = false;
+                        break;
+                    }
+                    columsum = 0;
+                    columnmulti = 1;
+                }
+            }
+
+            if (flag) {
+                int pos = 0;
+                while (pos <= 6) {
+                    int[] sum = {0,0,0};
+                    int[] multi = {1,1,1};
+                    for (int row = pos;row<pos+3;row++) {
+                        for (int column = 0;column<3;column++) {
+                            sum[0] += sudoku.sudokus[row][column];
+                            multi[0] *= sudoku.sudokus[row][column];
+                        }
+                        for (int column = 3;column<6;column++) {
+                            sum[1] += sudoku.sudokus[row][column];
+                            multi[1] *= sudoku.sudokus[row][column];
+                        }
+                        for (int column = 6;column<9;column++) {
+                            sum[2] += sudoku.sudokus[row][column];
+                            multi[2] *= sudoku.sudokus[row][column];
+                        }
+                    }
+                    for (int value:sum) {
+                        if (value != 45) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    for (int value:multi) {
+                        if (value != 362880) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    pos += 3;
+                }
+            }
+
             if (flag) {
                 System.out.println("Right");
             } else {
