@@ -21,26 +21,27 @@ package chapter4;
  * 15
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * @author linlinyeyu
  */
 public class MergeFruit {
-    public long recursive(List<Long> numbers,long total) {
-        long sum = numbers.get(0) + numbers.get(1);
-        numbers.remove(0);
-        numbers.remove(0);
-        total += sum;
-        if (numbers.size() == 0) {
-            return total;
+    public long recursive(long[] numbers,long total) {
+        for (int i = 0;i<numbers.length - 1;i++) {
+            long temp = numbers[i] + numbers[i+1];
+            total += temp;
+            int j;
+            for (j = i+1;j<numbers.length;j++) {
+                if (numbers[j] <= temp) {
+                    numbers[j-1] = numbers[j];
+                } else {
+                    break;
+                }
+            }
+            numbers[j-1] = temp;
         }
-        numbers.add(sum);
-        Collections.sort(numbers);
-        return recursive(numbers,total);
+        return total;
     }
     public static void main(String args[]) {
         Scanner scanner = new Scanner(System.in);
@@ -49,17 +50,13 @@ public class MergeFruit {
         for (int i=0;i<number;i++) {
             numberArr[i] = scanner.nextLong();
         }
-        List<Long> numberList = new ArrayList<>();
-        for (long value : numberArr) {
-            numberList.add(value);
-        }
-        Collections.sort(numberList);
+        Arrays.parallelSort(numberArr);
         MergeFruit mergeFruit = new MergeFruit();
-        if (numberList.size() == 1) {
-            System.out.println(numberList.get(0));
+        if (numberArr.length == 1) {
+            System.out.println(numberArr[0]);
             return;
         }
-        long total = mergeFruit.recursive(numberList,0);
+        long total = mergeFruit.recursive(numberArr,0);
         System.out.println(total);
     }
 }
