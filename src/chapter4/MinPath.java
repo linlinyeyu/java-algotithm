@@ -1,7 +1,5 @@
 package chapter4;
 
-import java.util.Arrays;
-
 /**
  * 最短路径问题
  * @author linlinyeyu
