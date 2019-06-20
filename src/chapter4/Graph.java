@@ -161,22 +161,44 @@ public class Graph {
      * 贝尔曼-福特算法，计算负权边
      * @param start
      */
-    public void negativeLoopMinPath(Vertex start,Vertex end) {
+    public void negativeLoopMinPath(Vertex start) {
         Map<String,Object> parents = new HashMap<>();
         Map<String,Double> weights = new HashMap<>();
         parents.put(start.value,start.value);
         weights.put(start.value,0d);
-        start.edges.forEach(e -> {
-            if (weights.get(e.toVertex.value) == null) {
-                weights.put(e.toVertex.value,e.weight);
-                parents.put(e.toVertex.value,start.value);
-            } else {
-                if (weights.get(e.toVertex.value) > (weights.get(start.value) + e.weight)) {
-                    weights.put(e.toVertex.value,weights.get(start.value) + e.weight);
-                    parents.put(e.toVertex.value,start.value);
-                }
+        int k = 0;
+        for (int i = 0;i<=15;i++) {
+            boolean isChange;
+            k++;
+            isChange = negativeSearchPath(start,parents,weights,false);
+            if (!isChange) {
+                break;
             }
-        });
+        }
+        System.out.print(k);
+    }
+
+    private boolean negativeSearchPath(Vertex vertex,Map<String,Object> parents,Map<String,Double> weights,boolean isChange) {
+        boolean tempChange;
+        if (vertex.edges != null) {
+            for (Edge e : vertex.edges) {
+                if (weights.get(e.toVertex.value) == null) {
+                    weights.put(e.toVertex.value, e.weight);
+                    parents.put(e.toVertex.value, vertex.value);
+                    tempChange = true;
+                } else {
+                    if (weights.get(e.toVertex.value) > (weights.get(vertex.value) + e.weight)) {
+                        weights.put(e.toVertex.value, weights.get(vertex.value) + e.weight);
+                        parents.put(e.toVertex.value, vertex.value);
+                        tempChange = true;
+                    } else {
+                        continue;
+                    }
+                }
+                isChange = negativeSearchPath(e.toVertex,parents,weights,tempChange);
+            }
+        }
+        return isChange;
     }
 
     public static void main(String args[]) throws InterruptedException {
@@ -205,9 +227,9 @@ public class Graph {
         F.edge(I,4).edge(J,3).edge(L,1);
         K.edge(L,2).edge(M,1).edge(N,3);
         L.edge(O,5).edge(P,2);
-        M.edge(P,1);
+        M.edge(P,-1);
         N.edge(P,2);
         J.edge(K,1);
-        graph.minWeightPath(top,P);
+        graph.negativeLoopMinPath(top);
     }
 }
