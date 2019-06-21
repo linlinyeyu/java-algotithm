@@ -179,11 +179,11 @@ public class Graph {
     }
 
     private boolean negativeSearchPath(Vertex vertex,Map<String,Object> parents,Map<String,Double> weights,boolean isChange) {
-        boolean tempChange;
+        boolean tempChange = false;
         if (vertex.edges != null) {
             for (Edge e : vertex.edges) {
                 if (weights.get(e.toVertex.value) == null) {
-                    weights.put(e.toVertex.value, e.weight);
+                    weights.put(e.toVertex.value, weights.get(vertex.value)+e.weight);
                     parents.put(e.toVertex.value, vertex.value);
                     tempChange = true;
                 } else {
@@ -191,14 +191,16 @@ public class Graph {
                         weights.put(e.toVertex.value, weights.get(vertex.value) + e.weight);
                         parents.put(e.toVertex.value, vertex.value);
                         tempChange = true;
-                    } else {
-                        continue;
                     }
                 }
-                isChange = negativeSearchPath(e.toVertex,parents,weights,tempChange);
+                tempChange = negativeSearchPath(e.toVertex,parents,weights,tempChange);
             }
         }
-        return isChange;
+        if (isChange) {
+            return true;
+        } else {
+            return tempChange;
+        }
     }
 
     public static void main(String args[]) throws InterruptedException {
@@ -220,7 +222,7 @@ public class Graph {
         Vertex O = graph.new Vertex("O");
         Vertex P = graph.new Vertex("P");
         top.edge(B,3).edge(C,2);
-        B.edge(D,1).edge(E,4).edge(F,1);
+        B.edge(D,1).edge(E,4).edge(F,1).edge(C,-3);
         C.edge(B,2).edge(J,1).edge(K,4);
         D.edge(G,4).edge(H,2);
         E.edge(H,1).edge(I,5);
