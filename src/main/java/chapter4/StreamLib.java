@@ -7,7 +7,6 @@ import com.clearspring.analytics.stream.frequency.IFrequency;
 import com.clearspring.analytics.stream.membership.BloomFilter;
 import com.clearspring.analytics.stream.membership.Filter;
 import com.clearspring.analytics.stream.quantile.TDigest;
-import it.unimi.dsi.fastutil.doubles.DoubleOpenCustomHashSet;
 
 import java.util.*;
 import java.util.stream.Collectors;
