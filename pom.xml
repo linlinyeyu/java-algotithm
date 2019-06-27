@@ -15,6 +15,12 @@
             <artifactId>stream-lib</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.huaban/jieba-analysis -->
+        <dependency>
+            <groupId>com.huaban</groupId>
+            <artifactId>jieba-analysis</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
